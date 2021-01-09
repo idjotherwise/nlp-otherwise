@@ -3,10 +3,10 @@ on:
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
-    
+
 jobs:
   update-notebooks:
-    if: github.event_name == 'schedule'
+    if: ( github.event_name == 'schedule' ) | (github.event_nane == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
 
