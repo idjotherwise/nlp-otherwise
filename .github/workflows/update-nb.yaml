@@ -1,8 +1,9 @@
 name: Update Notebooks and refresh
 on:
   schedule:
-    - cron: '40 * * * *'
-
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    
 jobs:
   update-notebooks:
     if: github.event_name == 'schedule'
