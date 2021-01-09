@@ -16,7 +16,6 @@ cymem==2.0.4
 dataclasses==0.6
 decorator==4.4.2
 defusedxml==0.6.0
-en-core-web-md==2.3.1
 entrypoints==0.3
 fastai==2.1.7
 fastcore==1.3.9
