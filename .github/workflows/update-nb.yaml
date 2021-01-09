@@ -53,7 +53,7 @@ jobs:
       - name: setup directories for Jekyll build
         run: |
           rm -rf _site
-          sudo chmod -R 777.
+          sudo chmod -R 777 .
 
       - name: Jekyll build
         uses: docker://hamelsmu/fastpages-jekyll
