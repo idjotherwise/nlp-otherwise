@@ -1,12 +1,12 @@
 name: Update Notebooks and refresh
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '0 */12 * * *'
   workflow_dispatch:
 
 jobs:
   update-notebooks:
-    if: ( github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' )
+    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' )
     runs-on: ubuntu-latest
     steps:
 
@@ -46,6 +46,15 @@ jobs:
         id: update_nb
         run : |
           ./_action_files/run_notebooks.sh
+
+      - name : save notebooks and images
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add images/
+          git commit -m'[bot] refresh long-running notebooks'
+          git push -f
+
 
       - name: convert notebooks and word docs to post
         uses: ./_action_files

@@ -9,8 +9,8 @@ for file in *.ipynb
 do
     if [ "${file}" = "2020-11-29-sentiment.ipynb" ]; then
         echo "Skipping ${file}"
-    elif papermill --kernel python3 "${file}" "${file}"; then
-        echo "Successfully refreshed ${file}\n\n\n\n"
+    elif papermill --kernel python3 "${file}" "${file}" && git add _notebooks/"${file}"; then
+        echo "Successfully refreshed and added ${file}\n\n\n\n"
     else
         echo "Error Refreshing ${file}"
         ERRORS="${ERRORS}, ${file}"
