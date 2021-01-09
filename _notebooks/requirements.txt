@@ -1,9 +1,13 @@
 altair==4.1.0
+ansiwrap==0.8.4
+appdirs==1.4.4
 appnope==0.1.0
 argon2-cffi==20.1.0
+async-generator==1.10
 attrs==20.3.0
 autopep8==1.5.4
 backcall==0.2.0
+black==20.8b1
 bleach==3.2.1
 blis==0.7.3
 bpemb==0.3.2
@@ -11,6 +15,7 @@ catalogue==1.0.0
 certifi==2020.6.20
 cffi==1.14.4
 chardet==3.0.4
+click==7.1.2
 cycler==0.10.0
 cymem==2.0.4
 dataclasses==0.6
@@ -49,9 +54,12 @@ MarkupSafe==1.1.1
 matplotlib==3.3.3
 mistune==0.8.4
 murmurhash==1.0.4
+mypy-extensions==0.4.3
+nbclient==0.5.1
 nbconvert==5.6.1
 nbdev==1.1.5
 nbformat==5.0.8
+nest-asyncio==1.4.3
 networkx==2.5
 notebook==6.1.5
 numba==0.52.0
@@ -59,7 +67,9 @@ numpy==1.19.4
 packaging==20.4
 pandas==1.1.4
 pandocfilters==1.4.3
+papermill==2.2.2
 parso==0.7.1
+pathspec==0.8.1
 pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==8.0.1
@@ -80,6 +90,7 @@ PyYAML==5.3.1
 pyzmq==20.0.0
 qtconsole==5.0.1
 QtPy==1.9.0
+regex==2020.11.13
 requests==2.24.0
 scikit-learn==0.23.2
 scipy==1.5.4
@@ -90,8 +101,10 @@ smart-open==4.1.0
 spacy==2.3.4
 spacy-lookups-data==0.3.2
 srsly==1.0.4
+tenacity==6.3.1
 terminado==0.9.1
 testpath==0.4.4
+textwrap3==0.9.2
 thinc==7.4.3
 threadpoolctl==2.1.0
 toml==0.10.2
@@ -101,6 +114,7 @@ torchvision==0.8.1
 tornado==6.1
 tqdm==4.53.0
 traitlets==5.0.5
+typed-ast==1.4.2
 typing-extensions==3.7.4.3
 uk-covid19==1.2.0
 umap-learn==0.4.6
