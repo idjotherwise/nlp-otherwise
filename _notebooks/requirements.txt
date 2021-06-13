@@ -118,7 +118,7 @@ typed-ast==1.4.2
 typing-extensions==3.7.4.3
 uk-covid19==1.2.0
 umap-learn==0.4.6
-urllib3==1.25.11
+urllib3==1.26.5
 vega-datasets==0.9.0
 wasabi==0.8.0
 wcwidth==0.2.5
