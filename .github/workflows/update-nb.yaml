@@ -1,7 +1,7 @@
 name: Update Notebooks and refresh
 on:
   schedule:
-    - cron: '0 */12 * * *'
+    - cron: '0 14 * * *'
   workflow_dispatch:
 
 jobs:
@@ -42,8 +42,13 @@ jobs:
           python3 -m ipykernel install --user --name python3
           sudo chmod -R 777 .
 
+      - name : pull latest data
+        id : update_data
+        run: |
+          ./_action_files/update_data.sh
+
       - name : update notebooks
-        id: update_nb
+        id : update_nb
         run : |
           ./_action_files/run_notebooks.sh
 
