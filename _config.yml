@@ -39,8 +39,12 @@ baseurl: "/nlp-otherwise" # the subpath of your site, e.g. "/blog".
 # Github and twitter are optional:
 minima:
   social_links:
-    twitter:
+    twitter: JohnstonIfan
     github: idjotherwise
+
+author:
+  name: "Ifan Johnston"
+  email: "ifan.johnston@gmail.com"
 
 # Set this to true to get LaTeX math equation support
 use_math: true
