@@ -7,16 +7,13 @@ ERRORS=""
 
 for file in *.ipynb
 do
-    if [[ "${file}" = "2020-11-29-sentiment.ipynb" || "${file}" = "2021-09-12-fastapi-sqlmodel.ipynb"]]; then
-        echo "Skipping ${file}"
-
-    elif papermill --kernel python3 "${file}" "${file}" && git add "${file}"; then
+    if papermill --kernel python3 "${file}" "${file}" && git add "${file}"; then
         echo "Successfully refreshed and added ${file}\n\n\n\n"
     else
         echo "Error Refreshing ${file}"
         ERRORS="${ERRORS}, ${file}"
     fi
-done
+donenb
 
 # Emit Errors if Exists so Downstream Task can open an issue
 if [ -z "$ERRORS" ]
