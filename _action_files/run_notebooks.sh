@@ -13,7 +13,7 @@ do
         echo "Error Refreshing ${file}"
         ERRORS="${ERRORS}, ${file}"
     fi
-donenb
+done
 
 # Emit Errors if Exists so Downstream Task can open an issue
 if [ -z "$ERRORS" ]
