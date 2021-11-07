@@ -1,5 +1,14 @@
 import pandas as pd
 
+"""
+Script to update all the datasets, ran daily
+"""
+
+
+"""
+Austria dataset
+"""
+
 new_timeline_data = pd.read_csv("../data_sets/CovidFaelle_Timeline.csv", sep=";")
 new_timeline_data['Time'] = pd.to_datetime(new_timeline_data['Time'], format='%d.%m.%Y %H:%M:%S')
 new_timeline_data['SiebenTageInzidenzFaelle'] = [float('.'.join(x.split(','))) for x in new_timeline_data.SiebenTageInzidenzFaelle]
@@ -39,4 +48,41 @@ full_data['TwoWeeklyCasesRate'] = 100000*full_data['TwoWeeklyCases']/full_data.A
 new_timeline_data.to_csv("../data_sets/CovidFaelle_Timeline.csv", index=False)
 new_tests_data.to_csv("../data_sets/CovidFallzahlen.csv", index=False)
 full_data.to_csv("../data_sets/at_full_data.csv", index=False)
-print("Successfully saved data.")
+print("Successfully saved Austrian data.")
+
+"""
+European dataset
+"""
+
+print("Getting latest data from covid19dh")
+
+from covid19dh import covid19
+import datetime
+
+countries = ["Italy", 
+             "Austria",
+             "Germany",
+             "Belgium",
+             "France",
+             "United Kingdom",
+             "Switzerland",
+             "Portugal"
+            ]
+
+yesterday = datetime.date.today() - datetime.timedelta(days=1)
+
+x, src = covid19(countries, raw=True, verbose=False, end=yesterday, cache=False)
+print("Preprocessing european data..")
+x_small = x.loc[:, ['administrative_area_level_1', 'date', 'vaccines', 'confirmed','tests', 'recovered', 'deaths', 'population']]
+x_small.rename(columns={'administrative_area_level_1': 'id'}, inplace=True)
+
+x_small['confirmed_per'] = 100000 * x_small['confirmed'] / x_small['population']
+x_small['deaths_per'] = 100000 * x_small['deaths'] / x_small['population']
+x_small['ratio'] = 100 * (x_small['deaths']) / (x_small['confirmed'])
+x_small['tests_per'] = 100000 * (x_small['tests']) / (x_small['population'])
+x_small['vaccines_per'] = x_small['vaccines'] / x_small['population']
+
+x_small['new_cases']=x_small.groupby('id').confirmed.diff().fillna(0)
+x_small['new_cases_per']=x_small.groupby('id').confirmed_per.diff().fillna(0)
+x_small.to_csv("../data_sets/european_covid.csv", index=False)
+print("Succesfully updated European data")
