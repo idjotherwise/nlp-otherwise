@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>European Covid data exploration | NLPOtherwise</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="European Covid data exploration" />
+<meta name="author" content="Ifan Johnston" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Exploring which countries have had the highest and lowest covid numbers in Europe" />
+<meta property="og:description" content="Exploring which countries have had the highest and lowest covid numbers in Europe" />
+<link rel="canonical" href="https://idjotherwise.github.io/nlp-otherwise/covid/2021/02/21/european-covid.html" />
+<meta property="og:url" content="https://idjotherwise.github.io/nlp-otherwise/covid/2021/02/21/european-covid.html" />
+<meta property="og:site_name" content="NLPOtherwise" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-21T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Ifan Johnston"},"description":"Exploring which countries have had the highest and lowest covid numbers in Europe","mainEntityOfPage":{"@type":"WebPage","@id":"https://idjotherwise.github.io/nlp-otherwise/covid/2021/02/21/european-covid.html"},"@type":"BlogPosting","url":"https://idjotherwise.github.io/nlp-otherwise/covid/2021/02/21/european-covid.html","headline":"European Covid data exploration","dateModified":"2021-02-21T00:00:00-06:00","datePublished":"2021-02-21T00:00:00-06:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/nlp-otherwise/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://idjotherwise.github.io/nlp-otherwise/feed.xml" title="NLPOtherwise" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-175826000-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-175826000-2');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/nlp-otherwise/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/nlp-otherwise/">NLPOtherwise</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/nlp-otherwise/about/">About Me</a><a class="page-link" href="/nlp-otherwise/search/">Search</a><a class="page-link" href="/nlp-otherwise/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">European Covid data exploration</h1><p class="page-description">Exploring which countries have had the highest and lowest covid numbers in Europe</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-02-21T00:00:00-06:00" itemprop="datePublished">
+        Feb 21, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ifan Johnston</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      3 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/nlp-otherwise/categories/#covid">covid</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/idjotherwise/nlp-otherwise/tree/master/_notebooks/2021-02-21-european-covid.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/nlp-otherwise/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/idjotherwise/nlp-otherwise/master?filepath=_notebooks%2F2021-02-21-european-covid.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/nlp-otherwise/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/idjotherwise/nlp-otherwise/blob/master/_notebooks/2021-02-21-european-covid.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/nlp-otherwise/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Importing-and-preparing-the-data">Importing and preparing the data </a></li>
+<li class="toc-entry toc-h1"><a href="#Plotting-the-data">Plotting the data </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Total-cases-per-100,000">Total cases per 100,000 </a></li>
+<li class="toc-entry toc-h2"><a href="#Total-deaths-per-100,000">Total deaths per 100,000 </a></li>
+<li class="toc-entry toc-h2"><a href="#Two-week-incidence-rate">Two week incidence rate </a></li>
+<li class="toc-entry toc-h2"><a href="#Case-fatality-rate">Case fatality rate </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Vaccines">Vaccines </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-02-21-european-covid.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Importing-and-preparing-the-data">
+<a class="anchor" href="#Importing-and-preparing-the-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Importing and preparing the data<a class="anchor-link" href="#Importing-and-preparing-the-data"> </a>
+</h1>
+<p>We will be looking at data from the following countries:</p>
+<ul>
+<li>Italy</li>
+<li>Austria</li>
+<li>Germany</li>
+<li>Belgium</li>
+<li>France</li>
+<li>United Kingdom</li>
+<li>Portugal</li>
+</ul>
+<p>We begin by importing the data, and adding some new features so that we can compare the data from different countries. For example we calculate 'confirmed cases per 100k population', 'deaths per 100k' and 'new cases' since these are not initially in the dataset. This data is collected and preprocessed in <a href="https://github.com/idjotherwise/nlp-otherwise/blob/master/src/update_datasets.py">this file</a>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">altair</span> <span class="k">as</span> <span class="nn">alt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">x_small_url</span> <span class="o">=</span> <span class="s2">"https://raw.githubusercontent.com/idjotherwise/nlp-otherwise/master/data_sets/european_covid.csv"</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here is a random sample of 5 rows from the dataset.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_small</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">x_small_url</span><span class="p">)</span>
+<span class="n">x_small</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>date</th>
+      <th>vaccines</th>
+      <th>confirmed</th>
+      <th>tests</th>
+      <th>recovered</th>
+      <th>deaths</th>
+      <th>population</th>
+      <th>confirmed_per</th>
+      <th>deaths_per</th>
+      <th>ratio</th>
+      <th>tests_per</th>
+      <th>vaccines_per</th>
+      <th>new_cases</th>
+      <th>new_cases_per</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2583</th>
+      <td>Portugal</td>
+      <td>2021-12-29</td>
+      <td>19177996.0</td>
+      <td>1330158.0</td>
+      <td>26078371.0</td>
+      <td>1175217.0</td>
+      <td>18921.0</td>
+      <td>10283822.0</td>
+      <td>12934.471250</td>
+      <td>183.988015</td>
+      <td>1.422463</td>
+      <td>2.535864e+05</td>
+      <td>1.864870</td>
+      <td>26867.0</td>
+      <td>261.255008</td>
+    </tr>
+    <tr>
+      <th>4571</th>
+      <td>France</td>
+      <td>2022-06-18</td>
+      <td>145413200.0</td>
+      <td>29236926.0</td>
+      <td>278238869.0</td>
+      <td>NaN</td>
+      <td>145754.0</td>
+      <td>66977107.0</td>
+      <td>43652.118328</td>
+      <td>217.617641</td>
+      <td>0.498527</td>
+      <td>4.154238e+05</td>
+      <td>2.171088</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>5285</th>
+      <td>Austria</td>
+      <td>2021-11-04</td>
+      <td>11792419.0</td>
+      <td>861429.0</td>
+      <td>98968990.0</td>
+      <td>776593.0</td>
+      <td>14077.0</td>
+      <td>8840521.0</td>
+      <td>9744.097661</td>
+      <td>159.232697</td>
+      <td>1.634145</td>
+      <td>1.119493e+06</td>
+      <td>1.333905</td>
+      <td>9767.0</td>
+      <td>110.479914</td>
+    </tr>
+    <tr>
+      <th>7008</th>
+      <td>Switzerland</td>
+      <td>2021-04-06</td>
+      <td>1672961.0</td>
+      <td>610837.0</td>
+      <td>5868819.0</td>
+      <td>NaN</td>
+      <td>9994.0</td>
+      <td>8513227.0</td>
+      <td>7175.152266</td>
+      <td>117.393792</td>
+      <td>1.636116</td>
+      <td>6.893765e+04</td>
+      <td>0.196513</td>
+      <td>2690.0</td>
+      <td>31.597889</td>
+    </tr>
+    <tr>
+      <th>2690</th>
+      <td>Portugal</td>
+      <td>2022-04-15</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>40700808.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>10283822.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3.957751e+05</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Plotting-the-data">
+<a class="anchor" href="#Plotting-the-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plotting the data<a class="anchor-link" href="#Plotting-the-data"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We will first look at the total numbers of cases and deaths in each country, before moving on to cases and deaths per 100k population.</p>
+<p></p>
+<div class="Toast">
+   <span class="Toast-icon"><svg class="octicon octicon-info octicon octicon-info" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm6.5-.25A.75.75 0 017.25 7h1a.75.75 0 01.75.75v2.75h.25a.75.75 0 010 1.5h-2a.75.75 0 010-1.5h.25v-2h-.25a.75.75 0 01-.75-.75zM8 6a1 1 0 100-2 1 1 0 000 2z"></path></svg></span>
+   <span class="Toast-content">In each of the charts below, you can click on the legend to filter the lines shown</span>
+</div>
+
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Total-cases-per-100,000">
+<a class="anchor" href="#Total-cases-per-100,000" aria-hidden="true"><span class="octicon octicon-link"></span></a>Total cases per 100,000<a class="anchor-link" href="#Total-cases-per-100,000"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">leg_selection</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">selection_multi</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'id'</span><span class="p">],</span> <span class="n">bind</span><span class="o">=</span><span class="s1">'legend'</span><span class="p">)</span>
+
+<span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">x_small_url</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"yearmonthdate(date):T"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Date'</span><span class="p">)),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"confirmed_per:Q"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Confirmed per 100k'</span><span class="p">)),</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">'id:N'</span><span class="p">,</span> <span class="s1">'confirmed_per:Q'</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">'id:N'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Countries"</span><span class="p">)),</span>
+    <span class="n">opacity</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="p">)</span><span class="o">.</span><span class="n">transform_filter</span><span class="p">(</span><span class="n">alt</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">confirmed_per</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Total number of cases per 100,000 population for selected European Countries'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+
+<div id="altair-viz-5b94f7c4b22145db98bf7f0d8c09fbaf"></div>
+<script type="text/javascript">
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-5b94f7c4b22145db98bf7f0d8c09fbaf") {
+      outputDiv = document.getElementById("altair-viz-5b94f7c4b22145db98bf7f0d8c09fbaf");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function loadScript(lib) {
+      return new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = paths[lib];
+        s.async = true;
+        s.onload = () => resolve(paths[lib]);
+        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+        document.getElementsByTagName("head")[0].appendChild(s);
+      });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else if (typeof vegaEmbed === "function") {
+      displayChart(vegaEmbed);
+    } else {
+      loadScript("vega")
+        .then(() => loadScript("vega-lite"))
+        .then(() => loadScript("vega-embed"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "https://raw.githubusercontent.com/idjotherwise/nlp-otherwise/master/data_sets/european_covid.csv"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "id", "legend": {"title": "Countries"}}, "opacity": {"condition": {"value": 1, "selection": "selector001"}, "value": 0.2}, "tooltip": [{"type": "nominal", "field": "id"}, {"type": "quantitative", "field": "confirmed_per"}], "x": {"type": "temporal", "axis": {"title": "Date"}, "field": "date", "timeUnit": "yearmonthdate"}, "y": {"type": "quantitative", "axis": {"title": "Confirmed per 100k"}, "field": "confirmed_per"}}, "selection": {"selector001": {"type": "multi", "fields": ["id"], "bind": "legend"}, "selector002": {"type": "interval", "bind": "scales", "encodings": ["x", "y"]}}, "title": "Total number of cases per 100,000 population for selected European Countries", "transform": [{"filter": "(datum.confirmed_per > 0)"}], "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Total-deaths-per-100,000">
+<a class="anchor" href="#Total-deaths-per-100,000" aria-hidden="true"><span class="octicon octicon-link"></span></a>Total deaths per 100,000<a class="anchor-link" href="#Total-deaths-per-100,000"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">x_small_url</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"yearmonthdate(date):T"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Date'</span><span class="p">)),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"deaths_per:Q"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Deaths per 100k'</span><span class="p">),</span> <span class="n">impute</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">ImputeParams</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">50</span><span class="p">)),</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s2">"id:N"</span><span class="p">,</span> <span class="s2">"deaths_per:Q"</span><span class="p">,</span> <span class="s2">"yearmonthdate(date):T"</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">'id:N'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Countries"</span><span class="p">)),</span>
+    <span class="n">opacity</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="p">)</span><span class="o">.</span><span class="n">transform_filter</span><span class="p">(</span><span class="n">alt</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">deaths_per</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Number of deaths per 100,000 population for selected European Countries'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+
+<div id="altair-viz-269db66137f54d48a0182b96b2f5be17"></div>
+<script type="text/javascript">
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-269db66137f54d48a0182b96b2f5be17") {
+      outputDiv = document.getElementById("altair-viz-269db66137f54d48a0182b96b2f5be17");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function loadScript(lib) {
+      return new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = paths[lib];
+        s.async = true;
+        s.onload = () => resolve(paths[lib]);
+        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+        document.getElementsByTagName("head")[0].appendChild(s);
+      });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else if (typeof vegaEmbed === "function") {
+      displayChart(vegaEmbed);
+    } else {
+      loadScript("vega")
+        .then(() => loadScript("vega-lite"))
+        .then(() => loadScript("vega-embed"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "https://raw.githubusercontent.com/idjotherwise/nlp-otherwise/master/data_sets/european_covid.csv"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "id", "legend": {"title": "Countries"}}, "opacity": {"condition": {"value": 1, "selection": "selector001"}, "value": 0.2}, "tooltip": [{"type": "nominal", "field": "id"}, {"type": "quantitative", "field": "deaths_per"}, {"type": "temporal", "field": "date", "timeUnit": "yearmonthdate"}], "x": {"type": "temporal", "axis": {"title": "Date"}, "field": "date", "timeUnit": "yearmonthdate"}, "y": {"type": "quantitative", "axis": {"title": "Deaths per 100k"}, "field": "deaths_per", "impute": {"value": 50}}}, "selection": {"selector001": {"type": "multi", "fields": ["id"], "bind": "legend"}, "selector003": {"type": "interval", "bind": "scales", "encodings": ["x", "y"]}}, "title": "Number of deaths per 100,000 population for selected European Countries", "transform": [{"filter": "(datum.deaths_per > 0)"}], "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Two-week-incidence-rate">
+<a class="anchor" href="#Two-week-incidence-rate" aria-hidden="true"><span class="octicon octicon-link"></span></a>Two week incidence rate<a class="anchor-link" href="#Two-week-incidence-rate"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">brush</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">selection</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'interval'</span><span class="p">,</span> <span class="n">encodings</span><span class="o">=</span><span class="p">[</span><span class="s1">'x'</span><span class="p">])</span>
+
+<span class="n">base</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">x_small_url</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">transform_filter</span><span class="p">(</span><span class="n">alt</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">new_cases_per</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">transform_window</span><span class="p">(</span>
+    <span class="n">rolling_mean</span><span class="o">=</span><span class="s1">'sum(new_cases_per)'</span><span class="p">,</span>
+    <span class="n">frame</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">14</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="n">groupby</span><span class="o">=</span><span class="p">[</span><span class="s1">'id:N'</span><span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"yearmonthdate(date):T"</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Date'</span><span class="p">)</span>
+           <span class="p">),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"rolling_mean:Q"</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Incidence rate'</span><span class="p">)</span>
+           <span class="p">),</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">'id:N'</span><span class="p">,</span> <span class="s1">'rolling_mean:Q'</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">'id:N'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Countries"</span><span class="p">)),</span>
+    <span class="n">opacity</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">'Number of new cases per 100,000 over two weeks for selected countries'</span>
+<span class="p">)</span>
+
+<span class="n">upper</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">'yearmonthdate(date):T'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Date'</span><span class="p">),</span>
+          <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">brush</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="n">lower</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">60</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span><span class="n">brush</span><span class="p">)</span>
+
+<span class="n">upper</span> <span class="o">&amp;</span> <span class="n">lower</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+
+<div id="altair-viz-94245b6a4eb9481595c16c1a0c46f357"></div>
+<script type="text/javascript">
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-94245b6a4eb9481595c16c1a0c46f357") {
+      outputDiv = document.getElementById("altair-viz-94245b6a4eb9481595c16c1a0c46f357");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function loadScript(lib) {
+      return new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = paths[lib];
+        s.async = true;
+        s.onload = () => resolve(paths[lib]);
+        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+        document.getElementsByTagName("head")[0].appendChild(s);
+      });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else if (typeof vegaEmbed === "function") {
+      displayChart(vegaEmbed);
+    } else {
+      loadScript("vega")
+        .then(() => loadScript("vega-lite"))
+        .then(() => loadScript("vega-embed"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "vconcat": [{"mark": "line", "encoding": {"color": {"type": "nominal", "field": "id", "legend": {"title": "Countries"}}, "opacity": {"condition": {"value": 1, "selection": "selector001"}, "value": 0.2}, "tooltip": [{"type": "nominal", "field": "id"}, {"type": "quantitative", "field": "rolling_mean"}], "x": {"type": "temporal", "axis": {"title": "Date"}, "field": "date", "scale": {"domain": {"selection": "selector004"}}, "timeUnit": "yearmonthdate"}, "y": {"type": "quantitative", "axis": {"title": "Incidence rate"}, "field": "rolling_mean"}}, "height": 400, "selection": {"selector001": {"type": "multi", "fields": ["id"], "bind": "legend"}}, "title": "Number of new cases per 100,000 over two weeks for selected countries", "transform": [{"filter": "(datum.new_cases_per > 0)"}, {"window": [{"op": "sum", "field": "new_cases_per", "as": "rolling_mean"}], "frame": [-14, 0], "groupby": ["id:N"]}], "width": 600}, {"mark": "line", "encoding": {"color": {"type": "nominal", "field": "id", "legend": {"title": "Countries"}}, "opacity": {"condition": {"value": 1, "selection": "selector001"}, "value": 0.2}, "tooltip": [{"type": "nominal", "field": "id"}, {"type": "quantitative", "field": "rolling_mean"}], "x": {"type": "temporal", "axis": {"title": "Date"}, "field": "date", "timeUnit": "yearmonthdate"}, "y": {"type": "quantitative", "axis": {"title": "Incidence rate"}, "field": "rolling_mean"}}, "height": 60, "selection": {"selector001": {"type": "multi", "fields": ["id"], "bind": "legend"}, "selector004": {"type": "interval", "encodings": ["x"]}}, "title": "Number of new cases per 100,000 over two weeks for selected countries", "transform": [{"filter": "(datum.new_cases_per > 0)"}, {"window": [{"op": "sum", "field": "new_cases_per", "as": "rolling_mean"}], "frame": [-14, 0], "groupby": ["id:N"]}], "width": 600}], "data": {"url": "https://raw.githubusercontent.com/idjotherwise/nlp-otherwise/master/data_sets/european_covid.csv"}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The ratio of confirmed cases and deaths gives an indication of what the case fatality rate is - it seems to be between 2 and 3%, assuming that the countries listed here are catching all positive cases (which they probably aren't, so it's likely lower than this).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Case-fatality-rate">
+<a class="anchor" href="#Case-fatality-rate" aria-hidden="true"><span class="octicon octicon-link"></span></a>Case fatality rate<a class="anchor-link" href="#Case-fatality-rate"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">base</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">x_small_url</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">transform_filter</span><span class="p">(</span><span class="n">alt</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">ratio</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"yearmonthdate(date):T"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Date'</span><span class="p">)),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"ratio:Q"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Ratio of deaths per case'</span><span class="p">)),</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="s1">'id:N'</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">'id:N'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Countries"</span><span class="p">)),</span>
+<span class="n">opacity</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'The ratio of deaths to confirmed cases (case fatality rate)'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+
+<span class="n">upper</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s1">'yearmonthdate(date):T'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Date'</span><span class="p">),</span>
+          <span class="n">scale</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="n">domain</span><span class="o">=</span><span class="n">brush</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="n">lower</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">60</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span><span class="n">brush</span><span class="p">)</span>
+
+<span class="n">upper</span> <span class="o">&amp;</span> <span class="n">lower</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+
+<div id="altair-viz-da602bfc56474aff95bd832bd617dfad"></div>
+<script type="text/javascript">
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-da602bfc56474aff95bd832bd617dfad") {
+      outputDiv = document.getElementById("altair-viz-da602bfc56474aff95bd832bd617dfad");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function loadScript(lib) {
+      return new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = paths[lib];
+        s.async = true;
+        s.onload = () => resolve(paths[lib]);
+        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+        document.getElementsByTagName("head")[0].appendChild(s);
+      });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else if (typeof vegaEmbed === "function") {
+      displayChart(vegaEmbed);
+    } else {
+      loadScript("vega")
+        .then(() => loadScript("vega-lite"))
+        .then(() => loadScript("vega-embed"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "vconcat": [{"mark": "line", "encoding": {"color": {"type": "nominal", "field": "id", "legend": {"title": "Countries"}}, "opacity": {"condition": {"value": 1, "selection": "selector001"}, "value": 0.2}, "tooltip": {"type": "nominal", "field": "id"}, "x": {"type": "temporal", "axis": {"title": "Date"}, "field": "date", "scale": {"domain": {"selection": "selector004"}}, "timeUnit": "yearmonthdate"}, "y": {"type": "quantitative", "axis": {"title": "Ratio of deaths per case"}, "field": "ratio"}}, "selection": {"selector001": {"type": "multi", "fields": ["id"], "bind": "legend"}}, "title": "The ratio of deaths to confirmed cases (case fatality rate)", "transform": [{"filter": "(datum.ratio > 0)"}], "width": 600}, {"mark": "line", "encoding": {"color": {"type": "nominal", "field": "id", "legend": {"title": "Countries"}}, "opacity": {"condition": {"value": 1, "selection": "selector001"}, "value": 0.2}, "tooltip": {"type": "nominal", "field": "id"}, "x": {"type": "temporal", "axis": {"title": "Date"}, "field": "date", "timeUnit": "yearmonthdate"}, "y": {"type": "quantitative", "axis": {"title": "Ratio of deaths per case"}, "field": "ratio"}}, "height": 60, "selection": {"selector001": {"type": "multi", "fields": ["id"], "bind": "legend"}, "selector004": {"type": "interval", "encodings": ["x"]}}, "title": "The ratio of deaths to confirmed cases (case fatality rate)", "transform": [{"filter": "(datum.ratio > 0)"}], "width": 600}], "data": {"url": "https://raw.githubusercontent.com/idjotherwise/nlp-otherwise/master/data_sets/european_covid.csv"}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Vaccines">
+<a class="anchor" href="#Vaccines" aria-hidden="true"><span class="octicon octicon-link"></span></a>Vaccines<a class="anchor-link" href="#Vaccines"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the chart below we plot the number vaccines given per population - this means that if the number is 1, then the country has given the equivalent of 1 shot for each person in the country. Since not everyone in the countries are eligible to get the vaccine, a ratio of 1 means that many people have recieved two jabs. Note also that some kinds of vaccines (the J&amp;J's <a href="https://www.cdc.gov/coronavirus/2019-ncov/vaccines/different-vaccines/janssen.html">Janssen vaccine</a>, for example) only require 1 shot so the goal is not neccesarily to reach exactly 2 shots per person in the whole country.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">alt</span><span class="o">.</span><span class="n">Chart</span><span class="p">(</span><span class="n">x_small_url</span><span class="p">)</span><span class="o">.</span><span class="n">mark_line</span><span class="p">()</span><span class="o">.</span><span class="n">transform_filter</span><span class="p">(</span><span class="n">alt</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">vaccines_per</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">X</span><span class="p">(</span><span class="s2">"yearmonthdate(date):T"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Date'</span><span class="p">)),</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Y</span><span class="p">(</span><span class="s2">"vaccines_per:Q"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Axis</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Number of vaccines given'</span><span class="p">)),</span>
+    <span class="n">tooltip</span><span class="o">=</span><span class="p">[</span><span class="s1">'id:N'</span><span class="p">,</span> <span class="s1">'vaccines_per:Q'</span><span class="p">],</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Color</span><span class="p">(</span><span class="s1">'id:N'</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Countries"</span><span class="p">)),</span>
+    <span class="n">opacity</span><span class="o">=</span><span class="n">alt</span><span class="o">.</span><span class="n">condition</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">,</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">alt</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_selection</span><span class="p">(</span><span class="n">leg_selection</span><span class="p">)</span><span class="o">.</span><span class="n">properties</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">'Number of vaccines given'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+
+<div id="altair-viz-87573d5f0f2d48549c5f71e62fbdb349"></div>
+<script type="text/javascript">
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-87573d5f0f2d48549c5f71e62fbdb349") {
+      outputDiv = document.getElementById("altair-viz-87573d5f0f2d48549c5f71e62fbdb349");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function loadScript(lib) {
+      return new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = paths[lib];
+        s.async = true;
+        s.onload = () => resolve(paths[lib]);
+        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+        document.getElementsByTagName("head")[0].appendChild(s);
+      });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else if (typeof vegaEmbed === "function") {
+      displayChart(vegaEmbed);
+    } else {
+      loadScript("vega")
+        .then(() => loadScript("vega-lite"))
+        .then(() => loadScript("vega-embed"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "https://raw.githubusercontent.com/idjotherwise/nlp-otherwise/master/data_sets/european_covid.csv"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "id", "legend": {"title": "Countries"}}, "opacity": {"condition": {"value": 1, "selection": "selector001"}, "value": 0.2}, "tooltip": [{"type": "nominal", "field": "id"}, {"type": "quantitative", "field": "vaccines_per"}], "x": {"type": "temporal", "axis": {"title": "Date"}, "field": "date", "timeUnit": "yearmonthdate"}, "y": {"type": "quantitative", "axis": {"title": "Number of vaccines given"}, "field": "vaccines_per"}}, "selection": {"selector001": {"type": "multi", "fields": ["id"], "bind": "legend"}, "selector005": {"type": "interval", "bind": "scales", "encodings": ["x", "y"]}}, "title": "Number of vaccines given", "transform": [{"filter": "(datum.vaccines_per > 0)"}], "width": 600, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><a class="u-url" href="/nlp-otherwise/covid/2021/02/21/european-covid.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/nlp-otherwise/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/nlp-otherwise/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/nlp-otherwise/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Ifan Johnston</li>
+          <li><a class="u-email" href="mailto:ifan.johnston@gmail.com">ifan.johnston@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>A collection of posts and thoughts about ML, NLP and Mathematics from a freelance data scientist</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/idjotherwise" target="_blank" title="idjotherwise"><svg class="svg-icon grey"><use xlink:href="/nlp-otherwise/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/JohnstonIfan" target="_blank" title="JohnstonIfan"><svg class="svg-icon grey"><use xlink:href="/nlp-otherwise/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Sentiment analysis fastai tutorial | NLPOtherwise</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Sentiment analysis fastai tutorial" />
+<meta name="author" content="Ifan Johnston" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A quick recap of the sentiment analysis tutorial from fastai" />
+<meta property="og:description" content="A quick recap of the sentiment analysis tutorial from fastai" />
+<link rel="canonical" href="https://idjotherwise.github.io/nlp-otherwise/sentiment/fastai/2020/11/29/sentiment.html" />
+<meta property="og:url" content="https://idjotherwise.github.io/nlp-otherwise/sentiment/fastai/2020/11/29/sentiment.html" />
+<meta property="og:site_name" content="NLPOtherwise" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-29T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Ifan Johnston"},"description":"A quick recap of the sentiment analysis tutorial from fastai","mainEntityOfPage":{"@type":"WebPage","@id":"https://idjotherwise.github.io/nlp-otherwise/sentiment/fastai/2020/11/29/sentiment.html"},"@type":"BlogPosting","url":"https://idjotherwise.github.io/nlp-otherwise/sentiment/fastai/2020/11/29/sentiment.html","headline":"Sentiment analysis fastai tutorial","dateModified":"2020-11-29T00:00:00-06:00","datePublished":"2020-11-29T00:00:00-06:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/nlp-otherwise/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://idjotherwise.github.io/nlp-otherwise/feed.xml" title="NLPOtherwise" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-175826000-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-175826000-2');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/nlp-otherwise/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/nlp-otherwise/">NLPOtherwise</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/nlp-otherwise/about/">About Me</a><a class="page-link" href="/nlp-otherwise/search/">Search</a><a class="page-link" href="/nlp-otherwise/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Sentiment analysis fastai tutorial</h1><p class="page-description">A quick recap of the sentiment analysis tutorial from fastai</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-11-29T00:00:00-06:00" itemprop="datePublished">
+        Nov 29, 2020
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ifan Johnston</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      9 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/nlp-otherwise/categories/#sentiment">sentiment</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/nlp-otherwise/categories/#fastai">fastai</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/idjotherwise/nlp-otherwise/tree/master/_notebooks/2020-11-29-sentiment.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/nlp-otherwise/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/idjotherwise/nlp-otherwise/master?filepath=_notebooks%2F2020-11-29-sentiment.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/nlp-otherwise/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/idjotherwise/nlp-otherwise/blob/master/_notebooks/2020-11-29-sentiment.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/nlp-otherwise/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Text-tutorial-from-fastai">Text tutorial from fastai </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Packages-and-data">Packages and data </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-11-29-sentiment.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Text-tutorial-from-fastai">
+<a class="anchor" href="#Text-tutorial-from-fastai" aria-hidden="true"><span class="octicon octicon-link"></span></a>Text tutorial from fastai<a class="anchor-link" href="#Text-tutorial-from-fastai"> </a>
+</h1>
+<p>The material can be found on the <a href="https://docs.fast.ai/tutorial.text.html">fastai website</a></p>
+<h2 id="Packages-and-data">
+<a class="anchor" href="#Packages-and-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Packages and data<a class="anchor-link" href="#Packages-and-data"> </a>
+</h2>
+<p>We begin by importing all the required packages from the fastai text module.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">fastai.text.all</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In <code>fastai</code>, each module has an <code>all</code> script which allows us to import everything that is necessesary from that module, in the knowledge that it is safe to do so.</p>
+<p>We will be using the <code>IMDB</code> dataset to fine-tune a sentiment analysis model, so lets download it now.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">IMDB</span><span class="p">)</span>
+<span class="n">path</span><span class="o">.</span><span class="n">ls</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#8) [Path('/Users/ifanjohnston/.fastai/data/imdb/test'),Path('/Users/ifanjohnston/.fastai/data/imdb/tmp_clas'),Path('/Users/ifanjohnston/.fastai/data/imdb/imdb.vocab'),Path('/Users/ifanjohnston/.fastai/data/imdb/unsup'),Path('/Users/ifanjohnston/.fastai/data/imdb/models'),Path('/Users/ifanjohnston/.fastai/data/imdb/README'),Path('/Users/ifanjohnston/.fastai/data/imdb/tmp_lm'),Path('/Users/ifanjohnston/.fastai/data/imdb/train')]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We see <code>train</code> and <code>test</code> folders, so let's check what is inside both of those.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">'train'</span><span class="p">)</span><span class="o">.</span><span class="n">ls</span><span class="p">(),(</span><span class="n">path</span><span class="o">/</span><span class="s1">'test'</span><span class="p">)</span><span class="o">.</span><span class="n">ls</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>((#4) [Path('/Users/ifanjohnston/.fastai/data/imdb/train/neg'),Path('/Users/ifanjohnston/.fastai/data/imdb/train/pos'),Path('/Users/ifanjohnston/.fastai/data/imdb/train/unsupBow.feat'),Path('/Users/ifanjohnston/.fastai/data/imdb/train/labeledBow.feat')],
+ (#3) [Path('/Users/ifanjohnston/.fastai/data/imdb/test/neg'),Path('/Users/ifanjohnston/.fastai/data/imdb/test/pos'),Path('/Users/ifanjohnston/.fastai/data/imdb/test/labeledBow.feat')])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Both have subfolders containing positive and negative comments (and also some <code>Bow</code> related files, which I guess is something to do with a bag of words model). This is a standard structure for datasets, and <code>fastai</code> has a built in method to deal with importing the files using the folder names as labels.</p>
+<p>So we create a <code>DataLoaders</code> (which is just a collection of <code>DataLoader</code> objects)</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span> <span class="o">=</span> <span class="n">TextDataLoaders</span><span class="o">.</span><span class="n">from_folder</span><span class="p">(</span><span class="n">untar_data</span><span class="p">(</span><span class="n">URLs</span><span class="o">.</span><span class="n">IMDB</span><span class="p">),</span> <span class="n">valid</span><span class="o">=</span><span class="s1">'test'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's check out a batch of these reviews</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dls</span><span class="o">.</span><span class="n">show_batch</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xxbos xxmaj match 1 : xxmaj tag xxmaj team xxmaj table xxmaj match xxmaj bubba xxmaj ray and xxmaj spike xxmaj dudley vs xxmaj eddie xxmaj guerrero and xxmaj chris xxmaj benoit xxmaj bubba xxmaj ray and xxmaj spike xxmaj dudley started things off with a xxmaj tag xxmaj team xxmaj table xxmaj match against xxmaj eddie xxmaj guerrero and xxmaj chris xxmaj benoit . xxmaj according to the rules of the match , both opponents have to go through tables in order to get the win . xxmaj benoit and xxmaj guerrero heated up early on by taking turns hammering first xxmaj spike and then xxmaj bubba xxmaj ray . a xxmaj german xxunk by xxmaj benoit to xxmaj bubba took the wind out of the xxmaj dudley brother . xxmaj spike tried to help his brother , but the referee restrained him while xxmaj benoit and xxmaj guerrero</td>
+      <td>pos</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>xxbos xxmaj polish film maker xxmaj walerian xxmaj borowczyk 's xxmaj la xxmaj bête ( french , 1975 , aka xxmaj the xxmaj beast ) is among the most controversial and brave films ever made and a very excellent one too . xxmaj this film tells everything that 's generally been hidden and denied about our nature and our sexual nature in particular with the symbolism and silence of its images . xxmaj the images may look wild , perverse , " sick " or exciting , but they are all in relation with the lastly mentioned . xxmaj sex , desire and death are very strong and primary things and dominate all the flesh that has a human soul inside it . xxmaj they interest and xxunk us so powerfully ( and by our nature ) that they are considered scary , unacceptable and something too wild to be</td>
+      <td>pos</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>xxbos xxmaj berlin - born in 1942 xxmaj margarethe von xxmaj trotta was an actress and now she is a very important director and writer . xxmaj she has been described , perhaps even unfairly caricatured , as a director whose commitment to bringing a woman 's sensibility to the screen outweighs her artistic strengths . " rosenstrasse , " which has garnered mixed and even strange reviews ( the xxmaj new xxmaj york xxmaj times article was one of the most negatively aggressive reviews xxmaj i 've ever read in that paper ) is not a perfect film . xxmaj it is a fine movie and a testament to a rare xxunk of successful opposition to the genocidal xxmaj nazi regime by , of all peoples , generically powerless xxmaj germans demonstrating in a xxmaj berlin street . \n\n xxmaj co - writer von xxmaj trotta uses the actual</td>
+      <td>pos</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>xxbos xxmaj here are the matches . . . ( adv . = advantage ) \n\n xxmaj the xxmaj warriors ( ultimate xxmaj warrior , xxmaj texas xxmaj tornado and xxmaj legion of xxmaj doom ) v xxmaj the xxmaj perfect xxmaj team ( mr xxmaj perfect , xxmaj ax , xxmaj smash and xxmaj crush of xxmaj demolition ) : xxmaj ax is the first to go in seconds when xxmaj warrior splashes him for the pin ( 4 - 3 adv . xxmaj warriors ) . i knew xxmaj ax was n't a healthy man but if he was that unhealthy why bother have him on the card ? xxmaj this would be his last xxup ppv . xxmaj eventually , both xxmaj legion of xxmaj doom and xxmaj demolition job out cheaply via double disqualification ( 2 - 1 adv . xxmaj warriors ) . xxmaj perfect</td>
+      <td>neg</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>xxbos xxmaj in xxup nyc , seaman xxmaj michael o'hara ( orson xxmaj welles ) rescues xxmaj elsa xxmaj bannister ( rita xxmaj hayworth ) from a mugging &amp; rape as she takes a horse &amp; carriage through xxmaj central xxmaj park -and lives to regret it . xxmaj xxunk - haired xxmaj hayworth 's a platinum blonde in this one ; as dazzling as fresh - fallen snow -but nowhere near as pure … \n\n xxmaj to reveal any more of the convoluted plot in this seminal " noir " would be criminal . xxmaj it 's as deceptive as the mirrors used to cataclysmic effect in the final scenes -but the film holds far darker secrets : xxmaj from the xxup ny xxmaj times : " childhood xxmaj shadows : xxmaj the xxmaj hidden xxmaj story xxmaj of xxmaj the xxmaj black xxmaj dahlia xxmaj murder " by</td>
+      <td>pos</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>xxbos xxmaj i 've rented and watched this movie for the 1st time on xxup dvd without reading any reviews about it . xxmaj so , after 15 minutes of watching xxmaj i 've noticed that something is wrong with this movie ; it 's xxup terrible ! i mean , in the trailers it looked scary and serious ! \n\n i think that xxmaj eli xxmaj roth ( mr . xxmaj director ) thought that if all the characters in this film were stupid , the movie would be funny … ( so stupid , it 's funny … ? xxup wrong ! ) xxmaj he should watch and learn from better horror - comedies such xxunk xxmaj night " , " the xxmaj lost xxmaj boys " and " the xxmaj return xxmaj of the xxmaj living xxmaj dead " ! xxmaj those are funny ! \n\n "</td>
+      <td>neg</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>xxbos xxup myra xxup breckinridge is one of those rare films that established its place in film history immediately . xxmaj praise for the film was absolutely nonexistent , even from the people involved in making it . xxmaj this film was loathed from day one . xxmaj while every now and then one will come across some maverick who will praise the film on philosophical grounds ( aggressive feminism or the courage to tackle the issue of xxunk ) , the film has not developed a cult following like some notorious flops do . xxmaj it 's not hailed as a misunderstood masterpiece like xxup scarface , or trotted out to be ridiculed as a camp classic like xxup showgirls . \n\n xxmaj undoubtedly the reason is that the film , though outrageously awful , is not lovable , or even likable . xxup myra xxup breckinridge is just</td>
+      <td>neg</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>xxbos i felt duty bound to watch the 1983 xxmaj timothy xxmaj dalton / xxmaj zelah xxmaj clarke adaptation of " jane xxmaj eyre , " because xxmaj i 'd just written an article about the 2006 xxup bbc " jane xxmaj eyre " for xxunk . \n\n xxmaj so , i approached watching this the way xxmaj i 'd approach doing homework . \n\n i was irritated at first . xxmaj the lighting in this version is bad . xxmaj everyone / everything is washed out in a bright white xxunk light that , in some scenes , casts shadows on the wall behind the characters . \n\n xxmaj and the sound is poorly recorded . i felt like i was listening to a high school play . \n\n xxmaj and the pancake make - up is way too heavy . \n\n xxmaj and the sets do n't fully</td>
+      <td>pos</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>xxbos xxmaj pier xxmaj paolo xxmaj pasolini , or xxmaj pee - pee - pee as i prefer to call him ( due to his love of showing male genitals ) , is perhaps xxup the most overrated xxmaj european xxmaj marxist director - and they are thick on the ground . xxmaj how anyone can see " art " in this messy , cheap sex - romp concoction is beyond me . xxmaj some of the " stories " here could have come straight out of a soft - core porn film , and i am not even so much referring to the nudity but the simplistic and banal , often pointless stories . xxmaj anyone who enjoyed this relatively watchable but dumb oddity should really sink his teeth into the " der xxmaj xxunk " soft - porn xxmaj german 70s movie series , because that 's what</td>
+      <td>neg</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note that a fair amount of preprocessing has been done already on the reviews, and some extra tokens have been inserted:</p>
+<ul>
+<li>
+<code>xxbos</code> indicates that it is the beginning of a review</li>
+<li>
+<code>xxmaj</code> indicates that the following word should be capitalized</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we can define a learner which is suitable for text classification:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span> <span class="o">=</span> <span class="n">text_classifier_learner</span><span class="p">(</span><span class="n">dls</span><span class="p">,</span> <span class="n">AWD_LSTM</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="n">accuracy</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note that we are using the <code>AWD_LSTM</code> architecture, which stands for <code>Adjusted stochastic gradient descent Weight Decay, Long-Short-Term Memory</code>. The AWD part basically just means that the way that weights are adjusted is modified, while the LSTM part means that it can deal with both long and short dependencies (more notes on LSTM architecture coming soon).</p>
+<p>The <code>drop_mult</code> parameters just controls the magnitude of the dropouts in the model. For the metrics that we will be tracking, we just take <code>accuracy</code>.</p>
+<p>Now we can fine-tune our model for a couple of epochs:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span><span class="o">.</span><span class="n">fine_tune</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>accuracy</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.608062</td>
+      <td>0.428918</td>
+      <td>0.809920</td>
+      <td>2:52:42</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+
+    <div>
+        <style>
+            /* Turns off some styling */
+            progress {
+                /* gets rid of default border in Firefox and Opera. */
+                border: none;
+                /* Needs to be in here for Safari polyfill so background images work as expected. */
+                background-size: auto;
+            }
+            .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+                background: #F44336;
+            }
+        </style>
+      <progress value="0" class="" max="2" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      0.00% [0/2 00:00&lt;00:00]
+    </div>
+    
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: left;">
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>accuracy</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<p>
+
+    </p>
+<div>
+        <style>
+            /* Turns off some styling */
+            progress {
+                /* gets rid of default border in Firefox and Opera. */
+                border: none;
+                /* Needs to be in here for Safari polyfill so background images work as expected. */
+                background-size: auto;
+            }
+            .progress-bar-interrupted, .progress-bar-interrupted::-webkit-progress-bar {
+                background: #F44336;
+            }
+        </style>
+      <progress value="352" class="" max="390" style="width:300px; height:20px; vertical-align: middle;"></progress>
+      90.26% [352/390 4:32:27&lt;29:24 0.3171]
+    </div>
+    
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span><span class="o">.</span><span class="n">show_results</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">learner</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">'2epochs'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+&lt;/div&gt;
+ 
+
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="idjotherwise/nlp-otherwise"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/nlp-otherwise/sentiment/fastai/2020/11/29/sentiment.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/nlp-otherwise/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/nlp-otherwise/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/nlp-otherwise/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Ifan Johnston</li>
+          <li><a class="u-email" href="mailto:ifan.johnston@gmail.com">ifan.johnston@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>A collection of posts and thoughts about ML, NLP and Mathematics from a freelance data scientist</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/idjotherwise" target="_blank" title="idjotherwise"><svg class="svg-icon grey"><use xlink:href="/nlp-otherwise/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/JohnstonIfan" target="_blank" title="JohnstonIfan"><svg class="svg-icon grey"><use xlink:href="/nlp-otherwise/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
